@@ -1,3 +1,12 @@
 {
-   "signedContributors": []
+  "signedContributors": [
+    {
+      "name": "sdake",
+      "id": 755849,
+      "comment_id": 1374437618,
+      "created_at": "2023-01-07T10:54:13Z",
+      "repoId": 585163945,
+      "pullRequestNo": 12
+    }
+  ]
 }
