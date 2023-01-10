@@ -1,0 +1,22 @@
+# The spellcheck configuration file
+# Documented in depth:
+# - https://github.com/marketplace/actions/github-spellcheck-action
+
+matrix:
+- name: Markdown
+  aspell:
+    lang: en
+  dictionary:
+    wordlists:
+    - .github/config/wordlist.txt
+    encoding: utf-8
+  pipeline:
+  - pyspelling.filters.markdown:
+  - pyspelling.filters.html:
+      comments: false
+      ignores:
+      - code
+      - pre
+  sources:
+  - '**/*.md'
+  default_encoding: utf-8

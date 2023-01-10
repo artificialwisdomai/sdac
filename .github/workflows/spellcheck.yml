@@ -1,0 +1,16 @@
+name: spellcheck
+on:
+  pull_request:
+jobs:
+  check-spelling:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Check Spelling
+        uses: rojopolis/spellcheck-github-actions@0.29.0
+        with:
+      with:
+        source_files: README.md .github/CODE_OF_CONDUCT.md
+        task_name: Markdown
+        output_file: spellcheck-output.txt
