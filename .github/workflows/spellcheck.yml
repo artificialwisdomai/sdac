@@ -1,3 +1,7 @@
+# Spellcheck workflow configuraiton
+# Documented in depth:
+# - https://github.com/marketplace/actions/github-spellcheck-action
+
 name: spellcheck
 on:
   pull_request:
@@ -5,12 +9,10 @@ jobs:
   check-spelling:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-      - name: Check Spelling
-        uses: rojopolis/spellcheck-github-actions@0.29.0
-        with:
+    - uses: actions/checkout@master
+    - uses: rojopolis/spellcheck-github-actions@0.29.0
+      name: Spellcheck
       with:
-        source_files: README.md .github/CODE_OF_CONDUCT.md
+        config_path: .github/config/spellcheck.yml
         task_name: Markdown
         output_file: spellcheck-output.txt
