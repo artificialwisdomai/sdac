@@ -24,4 +24,4 @@ jobs:
           custom-notsigned-prcomment: 'Welcome to a XertAI project! XertAI is managed by Computelify. To ensure your work is properly protected, we ask that you sign the Computelify CLA.'
           custom-allsigned-prcomment: 'PogChamp! Thank you for signing the Computelify CLA **ALL CONTRIBUTORS HAVE SIGNED CLA**'
           remote-organization-name: xertai
-          remote-repository-name: community
+          remote-repository-name: signatures
