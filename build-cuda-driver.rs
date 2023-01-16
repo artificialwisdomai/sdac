@@ -32,5 +32,8 @@ fn main() {
     bindings
         .write_to_file(target_path.join("cuda_driver_bindings.rs"))
         .expect("Couldn't write bindings!");
-    println!("Wrote bindings to {}\n", target_path.join("cuda_driver_bindings.rs").display())
+    println!(
+        "Wrote bindings to {}\n",
+        target_path.join("cuda_driver_bindings.rs").display()
+    )
 }
