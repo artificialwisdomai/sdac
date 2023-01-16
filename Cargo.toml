@@ -6,6 +6,7 @@ license = "MIT"
 description = "Software Defined Acclerated Compute"
 homepage = "https://github.com/xertai/sdac"
 edition = "2021"
+build = "build-cuda-driver.rs"
 
-[dependencies]
-clap = { version = "4.0.18", features = ["derive"] }
+[build-dependencies]
+bindgen = "0.63.0"
