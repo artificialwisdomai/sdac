@@ -20,8 +20,10 @@ jobs:
       run: sudo dpkg -i cuda-keyring_1.0-1_all.deb
     - name: Update APT cache
       run: sudo apt-get -y update
-    - name: Install CUDA Driver Developer Headers 12.0 (only)
-      run: sudo apt-get install --ignore-depends cuda-driver-dev-12-0
+    - name: Download CUDA Driver Developement Headers (12.0)
+    - run: sudo apt-get download cuda-driver-dev-12-0
+    - name: Install CUDA Driver Development Headers (12.0)
+    - run: sudo dpkg --force-all -i ./cuda-driver-dev-12.0*
     - name: Lint
       run: cargo clippy --verbose
     - name: Build
