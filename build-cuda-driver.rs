@@ -12,7 +12,7 @@ use std::path::PathBuf;
 
 fn main() {
     let bindings = bindgen::Builder::default()
-        .header("/usr/local/cuda/targets/x86_64-linux/include/cuda.h")
+        .header("/usr/local/cuda-12.0/include/cuda.h")
         .allowlist_type("^CU.*")
         .allowlist_type("^cudaError_enum")
         .allowlist_type("^cu.*Complex$")
