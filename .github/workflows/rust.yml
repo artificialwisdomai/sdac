@@ -15,9 +15,9 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     - name: Install CUDA keyring
-    - run: wget https://developer.download.nvidia.com/compute/cuda/repos/debian11/x86_64/cuda-keyring_1.0-1_all.deb
+      run: wget https://developer.download.nvidia.com/compute/cuda/repos/debian11/x86_64/cuda-keyring_1.0-1_all.deb
     - name: dpkg -i cuda-keyring_1.0-1_all.deb
-    - run:  apt-get -y update
+      run:  apt-get -y update
     - name: Install CUDA Driver Developer Headers 12.0 (only)
       run: apt install --ignore-depends cuda-driver-dev-12-0
     - name: Lint
