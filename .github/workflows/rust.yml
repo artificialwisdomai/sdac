@@ -21,7 +21,7 @@ jobs:
     - name: Download CUDA Driver Developement Headers (12.0)
       run: wget https://developer.download.nvidia.com/compute/cuda/repos/debian11/x86_64/cuda-driver-dev-12-0_12.0.107-1_amd64.deb
     - name: Install CUDA Driver Development Headers (12.0)
-      run: sudo dpkg --force-all -i cuda-driver-dev-12.0*
+      run: sudo dpkg -i cuda-driver-dev*
     - name: Lint
       run: cargo clippy --verbose
     - name: Build
