@@ -1,2 +1,7 @@
 * @xertai/leadership
-* @xertai/sdac-reviewers
+/src/ @xertai/sdac-reviewers
+*.rs @xertai/sdac-reviewers
+Cargo.lock @xertai/sdac-reviewers
+# Note: Cargo.toml, License, README.md, and any workflow files require
+# @xertai/leadership review.
+
