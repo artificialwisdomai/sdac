@@ -8,5 +8,16 @@ homepage = "https://github.com/xertai/sdac"
 edition = "2021"
 build = "build-cuda-driver.rs"
 
+[lib]
+crate-type = ["cdylib"]
+
 [build-dependencies]
 bindgen = { git = "https://github.com/rust-lang/rust-bindgen", branch="main" }
+tonic-build = "0.8"
+
+[dependencies]
+tonic = "0.8"
+prost = "0.11"
+tokio = { version = "1.0", features = ["macros", "rt-multi-thread"] }
+futures = "0.3.25"
+libc = "0.2.139"

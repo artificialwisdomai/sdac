@@ -1,0 +1,44 @@
+syntax = "proto3";
+package cuda;
+
+message cuInitRequest {
+    uint32 flags = 1;
+}
+
+message cuInitResponse {
+    uint32 result = 1;
+}
+
+message cuDeviceGetRequest {
+    int32 ordinal = 1;
+}
+
+message cuDeviceGetResponse {
+    int32 device = 1;
+    uint32 result = 2;
+}
+
+message cuDeviceGetCountRequest {
+}
+
+message cuDeviceGetCountResponse {
+    int32 count = 1;
+    uint32 result = 2;
+}
+
+message cuDeviceGetNameRequest {
+    int32 device = 1;
+    int32 maxLen = 2;
+}
+
+message cuDeviceGetNameResponse {
+    string name = 1;
+    uint32 result = 2;
+}
+
+service Cuda {
+    rpc cuInit (cuInitRequest) returns (cuInitResponse);
+    rpc cuDeviceGet (cuDeviceGetRequest) returns (cuDeviceGetResponse);
+    rpc cuDeviceGetCount (cuDeviceGetCountRequest) returns (cuDeviceGetCountResponse);
+    rpc cuDeviceGetName (cuDeviceGetNameRequest) returns (cuDeviceGetNameResponse);
+}

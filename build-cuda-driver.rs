@@ -52,4 +52,10 @@ fn main() {
         "Wrote bindings to {}",
         target_path.join("cuda_driver_bindings.rs").display()
     );
+
+    tonic_build::configure()
+    .compile(
+        &["proto/cuda.proto"],
+        &["proto"],
+    ).expect("proto generation failed");
 }
