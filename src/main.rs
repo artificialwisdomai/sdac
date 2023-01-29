@@ -4,113 +4,84 @@
 
 include!(concat!(env!("OUT_DIR"), "/cuda_driver_bindings.rs"));
 
-use cuda::cuda_server::{Cuda, CudaServer};
+mod service;
+use futures_util::StreamExt;
 use std::ffi::CString;
-use tonic::{transport::Server, Request, Response, Status};
+use anyhow;
+use tarpc::{
+    context,    server::{BaseChannel, Channel},
+    tokio_serde::formats::Json,
+};
+use crate::service::Cuda as CudaService;
 
-pub mod cuda {
-    tonic::include_proto!("cuda");
-}
+// This is the type that implements the generated World trait. It is the business logic
+// and is used to start the server.
+#[derive(Clone)]
+struct RemoteCuda;
 
-#[derive(Debug, Default)]
-pub struct MyCuda {}
-
-#[tonic::async_trait]
-impl Cuda for MyCuda {
-    async fn cu_init(
-        &self,
-        request: Request<cuda::CuInitRequest>,
-    ) -> Result<Response<cuda::CuInitResponse>, Status> {
-        println!("Got a request: {:?}", request);
-
-        // This does not look right. cuInit should be called once per process.
-        // I suspect what we need to do is:
-        // 1. new connection
-        // 2. fork
-        // 3. forked server handles all requests for that connection...
-        unsafe {
-            let res = cuInit(request.into_inner().flags);
-
-            let reply = cuda::CuInitResponse { result: res };
-
-            Ok(tonic::Response::new(reply))
-        }
+#[tarpc::server]
+impl service::Cuda for RemoteCuda {
+    async fn cuInit(self, _: context::Context, flags: u32) -> u32 {
+        // TODO(asalkeld) This does not look right. cuInit should be called once per process or once for the server.
+        // https://github.com/xertai/sdac/issues/38
+        unsafe { cuInit(flags) }
     }
-    async fn cu_device_get(
-        &self,
-        request: Request<cuda::CuDeviceGetRequest>,
-    ) -> Result<Response<cuda::CuDeviceGetResponse>, Status> {
-        println!("Got a request: {:?}", request);
-
+    async fn cuDeviceGet(self, _: context::Context, ordinal: i32) -> (i32, u32) {
         let mut dev: CUdevice = 0;
         let devPtr: *mut CUdevice = &mut dev;
 
         unsafe {
-            let res = cuDeviceGet(devPtr, request.into_inner().ordinal);
-            let reply = cuda::CuDeviceGetResponse {
-                result: res.into(),
-                device: *devPtr,
-            };
-            Ok(Response::new(reply))
+            let res = cuDeviceGet(devPtr, ordinal);
+            (*devPtr, res)
         }
     }
-    async fn cu_device_get_count(
-        &self,
-        request: Request<cuda::CuDeviceGetCountRequest>,
-    ) -> Result<Response<cuda::CuDeviceGetCountResponse>, Status> {
-        println!("Got a request: {:?}", request);
-
+    async fn cuDeviceGetCount(self, _: context::Context) -> (i32, u32) {
         let mut count: i32 = 0;
         let countPtr: *mut i32 = &mut count;
 
         unsafe {
             let res = cuDeviceGetCount(countPtr);
-            let reply = cuda::CuDeviceGetCountResponse {
-                result: res.into(),
-                count: *countPtr,
-            };
 
-            Ok(Response::new(reply))
+            (*countPtr, res)
         }
     }
-    async fn cu_device_get_name(
-        &self,
-        request: Request<cuda::CuDeviceGetNameRequest>,
-    ) -> Result<Response<cuda::CuDeviceGetNameResponse>, Status> {
-        println!("Got a request: {:?}", request);
-
-        let req = request.into_inner();
-
+    async fn cuDeviceGetName(self, _: context::Context, max_len: i32, dev: i32) -> (String, u32) {
         let mut name = [0; 1024];
-        let mut len = req.max_len;
+        let mut len = max_len;
         if len > 1024 {
             len = 1024
         }
 
         unsafe {
-            let res = cuDeviceGetName(name.as_mut_ptr(), len, req.device);
+            let res = cuDeviceGetName(name.as_mut_ptr(), len, dev);
 
-            let reply = cuda::CuDeviceGetNameResponse {
-                result: res.into(),
-                name: CString::from_raw(name.as_mut_ptr())
-                    .into_string()
-                    .expect("failed to convert name"),
-            };
+            let strName = CString::from_raw(name.as_mut_ptr())
+                .into_string()
+                .expect("failed to convert name");
 
-            Ok(Response::new(reply))
+            (strName, res)
         }
     }
 }
 
 #[tokio::main]
-async fn main() -> Result<(), Box<dyn std::error::Error>> {
-    let addr = "[::1]:50051".parse()?;
-    let c = MyCuda::default();
+async fn main() -> anyhow::Result<()> {
+    // JSON transport is provided by the json_transport tarpc module. It makes it easy
+    // to start up a serde-powered json serialization strategy over TCP.
+    // TODO(asalkeld) we should bind to a particular interface.
+    // https://github.com/xertai/sdac/issues/39
+    let listener = tarpc::serde_transport::tcp::listen("[::1]:50055", Json::default).await?;
 
-    Server::builder()
-        .add_service(CudaServer::new(c))
-        .serve(addr)
-        .await?;
+    println!("Sdac listening on `{}`", listener.local_addr());
+    tokio::spawn(async move {
+        listener
+            .filter_map(|r| async move { r.ok() })
+            .map(BaseChannel::with_defaults)
+            .map(|channel| channel.execute(RemoteCuda.serve()))
+            .buffer_unordered(10)
+            .for_each(|()| async {})
+            .await;
+    });
 
     Ok(())
 }
