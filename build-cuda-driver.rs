@@ -33,9 +33,8 @@ impl ParseCallbacks for NetworkEmitter {
 }
 
 fn main() {
-    println!("cargo:rustc-link-lib=cuinj64");
-    println!("cargo:rustc-link-search=native=/usr/local/cuda-11.8/lib64/");
-    println!("cargo:rustc-link-search=native=/usr/local/cuda-11.8/lib/");
+    println!("cargo:rustc-link-lib=dylib=cuinj64");
+    println!("cargo:rustc-link-search=native=/usr/local/cuda-11.8/lib64");
     let bindings = bindgen::Builder::default()
         .header("/usr/local/cuda-11.8/include/cuda.h")
         .allowlist_function("cu.*")
