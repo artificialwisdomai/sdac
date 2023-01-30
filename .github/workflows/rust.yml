@@ -23,10 +23,7 @@ jobs:
         wget https://developer.download.nvidia.com/compute/cuda/repos/debian11/x86_64/cuda-toolkit-config-common_11.8.89-1_all.deb
         wget https://developer.download.nvidia.com/compute/cuda/repos/debian11/x86_64/cuda-cudart-11-8_11.8.89-1_amd64.deb
         wget https://developer.download.nvidia.com/compute/cuda/repos/debian11/x86_64/cuda-cudart-dev-11-8_11.8.89-1_amd64.deb
-        wget https://developer.download.nvidia.com/compute/cuda/repos/debian11/x86_64/cuda-cccl-11-8_11.8.89-1_amd64.deb
-        wget https://developer.download.nvidia.com/compute/cuda/repos/debian11/x86_64/libcublas-11-8_11.11.3.6-1_amd64.deb
-        wget https://developer.download.nvidia.com/compute/cuda/repos/debian11/x86_64/libcublas-dev-11-8_11.11.3.6-1_amd64.deb
-        wget https://developer.download.nvidia.com/compute/cuda/repos/debian11/x86_64/cuda-nvprof-11-8_11.8.87-1_amd64.deb
+        wget https://developer.download.nvidia.com/compute/cuda/repos/debian11/x86_64/cuda-driver-dev-11-8_11.8.89-1_amd64.deb
     - name: Install CUDA (11.8)
       run: sudo dpkg -i --force-depends *.deb
     - name: Lint

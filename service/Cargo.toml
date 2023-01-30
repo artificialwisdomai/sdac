@@ -1,0 +1,11 @@
+[package]
+name = "service"
+version = "0.0.0"
+edition = "2021"
+publish = false
+
+[lib]
+path = "service.rs"
+
+[dependencies]
+tarpc = { version = "0.31.0", features = ["full"] }

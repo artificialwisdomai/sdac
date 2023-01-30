@@ -1,3 +1,7 @@
+#![allow(non_upper_case_globals)]
+#![allow(non_camel_case_types)]
+#![allow(non_snake_case)]
+
 /// This is the service definition. It looks a lot like a trait definition.
 // TODO(asalkeld) auto generate this interface. https://github.com/xertai/sdac/issues/40
 #[tarpc::service]

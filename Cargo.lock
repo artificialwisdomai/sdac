@@ -563,7 +563,22 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "7b4b9743ed687d4b4bcedf9ff5eaa7398495ae14e61cba0a295704edbc7decde"
 
 [[package]]
-name = "sdac"
+name = "sdac-lib"
+version = "0.1.0"
+dependencies = [
+ "anyhow",
+ "futures",
+ "futures-util",
+ "libc",
+ "libloading",
+ "service",
+ "tarpc",
+ "tokio",
+ "tokio-serde",
+]
+
+[[package]]
+name = "sdac-server"
 version = "0.1.0"
 dependencies = [
  "anyhow",
@@ -572,6 +587,7 @@ dependencies = [
  "futures-util",
  "libc",
  "libloading",
+ "service",
  "tarpc",
  "tokio",
  "tokio-serde",
@@ -612,6 +628,13 @@ dependencies = [
  "itoa",
  "ryu",
  "serde",
+]
+
+[[package]]
+name = "service"
+version = "0.0.0"
+dependencies = [
+ "tarpc",
 ]
 
 [[package]]
@@ -731,9 +754,9 @@ dependencies = [
 
 [[package]]
 name = "tokio"
-version = "1.24.2"
+version = "1.25.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "597a12a59981d9e3c38d216785b0c37399f6e415e8d0712047620f189371b0bb"
+checksum = "c8e00990ebabbe4c14c08aca901caed183ecd5c09562a12c824bb53d3c3fd3af"
 dependencies = [
  "autocfg",
  "libc",

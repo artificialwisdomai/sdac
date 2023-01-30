@@ -4,7 +4,6 @@
 
 include!(concat!(env!("OUT_DIR"), "/cuda_driver_bindings.rs"));
 
-mod service;
 use futures_util::StreamExt;
 use std::ffi::CString;
 use anyhow;
@@ -12,7 +11,7 @@ use tarpc::{
     context,    server::{BaseChannel, Channel},
     tokio_serde::formats::Json,
 };
-use crate::service::Cuda as CudaService;
+use service::Cuda as CudaService;
 
 // This is the type that implements the generated World trait. It is the business logic
 // and is used to start the server.
