@@ -22,17 +22,20 @@ struct NetworkEmitter {}
 
 impl ParseCallbacks for NetworkEmitter {
     fn generated_name_override(&self, _item_info: ItemInfo<'_>) -> Option<String> {
- //        p!("f {:#?}\n", item_info.name);
-         None
+        // p!("f {:#?}\n", item_info.name);
+        None
     }
 
     fn item_name(&self, _name: &str) -> Option<String> {
-//        p!("v {}\n", name);
+        // p!("v {}\n", name);
         None
     }
 }
 
 fn main() {
+    println!("cargo:rustc-link-lib=dylib=cuda");
+    println!("cargo:rustc-link-search=native=/usr/local/cuda-11.8/targets/x86_64-linux/lib/stubs");
+
     let bindings = bindgen::Builder::default()
         .header("/usr/local/cuda-11.8/include/cuda.h")
         .allowlist_function("cu.*")

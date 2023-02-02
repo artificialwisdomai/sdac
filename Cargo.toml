@@ -1,12 +1,8 @@
-[package]
-name = "sdac"
-version = "0.1.0"
-authors = ["The SDAC Authors"]
-license = "MIT"
-description = "Software Defined Acclerated Compute"
-homepage = "https://github.com/xertai/sdac"
-edition = "2021"
-build = "build-cuda-driver.rs"
+[workspace]
+members = [
+    "sdac-lib",
+    "sdac-server",
 
-[build-dependencies]
-bindgen = { git = "https://github.com/rust-lang/rust-bindgen", branch="main" }
+    # internal
+    "service"
+]
