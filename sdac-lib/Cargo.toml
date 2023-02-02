@@ -6,9 +6,13 @@ license = "MIT"
 description = "Software Defined Acclerated Compute"
 homepage = "https://github.com/xertai/sdac"
 edition = "2021"
+build = "build-cuda-types.rs"
 
 [lib]
 crate-type = ["cdylib"]
+
+[build-dependencies]
+bindgen = "0.63.0"
 
 [dependencies]
 tarpc = { version = "0.31.0", features = ["full"] }
@@ -20,3 +24,4 @@ libc = "0.2.139"
 futures = "0.3.25"
 anyhow = "1.0.68"
 service = { version = "0.0.0", path = "../service" }
+clib = "0.2.1"

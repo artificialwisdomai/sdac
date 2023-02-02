@@ -1,7 +1,7 @@
 extern crate bindgen;
 
 use std::env;
-use std::path::PathBuf;
+use std::path::{Path, PathBuf};
 
 use bindgen::callbacks::*;
 
@@ -33,13 +33,24 @@ impl ParseCallbacks for NetworkEmitter {
 }
 
 fn main() {
+    let cdir = std::env::var("CUDA_DIR").unwrap_or("/usr/local/cuda-11.8".to_string());
+    let cuda_dir = Path::new(&cdir);
+    let cuda_lib = cuda_dir.join("targets/x86_64-linux/lib/stubs");
+
     println!("cargo:rustc-link-lib=dylib=cuda");
-    println!("cargo:rustc-link-search=native=/usr/local/cuda-11.8/targets/x86_64-linux/lib/stubs");
+    println!("cargo:rustc-link-search=native={}", cuda_lib.display());
 
     let bindings = bindgen::Builder::default()
-        .header("/usr/local/cuda-11.8/include/cuda.h")
+        .header(cuda_dir.join("include/cuda.h").display().to_string())
+        .header(
+            cuda_dir
+                .join("include/cuda_runtime_api.h")
+                .display()
+                .to_string(),
+        )
         .allowlist_function("cu.*")
         .allowlist_type("CU.*")
+        .allowlist_type("cuda.*")
         .derive_eq(true)
         .array_pointers_in_arguments(true)
         .parse_callbacks(Box::new(NetworkEmitter {}))
