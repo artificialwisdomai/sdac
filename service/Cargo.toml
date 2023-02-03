@@ -3,9 +3,16 @@ name = "service"
 version = "0.0.0"
 edition = "2021"
 publish = false
+build = "build-cuda-types.rs"
 
 [lib]
 path = "service.rs"
 
 [dependencies]
+serde = { version = "1.0.152", features = ["derive"] }
 tarpc = { version = "0.31.0", features = ["full"] }
+
+[build-dependencies]
+bindgen = "0.63.0"
+failure = "0.1.8"
+regex = "1.7.1"
